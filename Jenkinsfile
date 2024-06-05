@@ -37,8 +37,7 @@ spec:
         // GITHUB_TOKEN = credentials('github-token')
         SONAR_HOST_URL = credentials('sonarqube-host')
         SONAR_TOKEN = credentials('sonarqube-token')
-        SCANNER_HOME = tool 'sonar-scanner'
-
+    // SCANNER_HOME = tool 'sonar-scanner'
     }
     stages {
         stage('Run Tests') {
@@ -49,36 +48,38 @@ spec:
             }
         }
         // configure scanner
-        stage('SonarQube Scan') {
+        //         stage('SonarQube Scan') {
+        //             steps {
+        //                 script {
+        //                     // withSonarQubeEnv('sq1') {
+        //                     //     sh """
+        //                     //         sonar-scanner \
+        //                     //         -Dsonar.projectKey=${SONAR_PROJECT_KEY} \
+        //                     //         -Dsonar.host.url=${SONAR_HOST_URL} \
+        //                     //         -Dsonar.login=${SONAR_TOKEN}
+        //                     //     """
+        //                     // }
+        //                     withSonarQubeEnv('sq1') {
+        //                     sh" ${SCANNER_HOME**}**}/bin/sonar-scanner \
+        //                     -Dsonar.projectKey=${SONAR_PROJECT_KEY} \
+        //                     -Dsonar.sources=. "
+        //   }
+        //                 }
+        //             }
+        //         }
+        stage('Scan') {
             steps {
                 script {
-                    // withSonarQubeEnv('sq1') {
-                    //     sh """
-                    //         sonar-scanner \
-                    //         -Dsonar.projectKey=${SONAR_PROJECT_KEY} \
-                    //         -Dsonar.host.url=${SONAR_HOST_URL} \
-                    //         -Dsonar.login=${SONAR_TOKEN}
-                    //     """
-                    // }
-                    withSonarQubeEnv('sq1') {
-                    sh" ${SCANNER_HOME**}**}/bin/sonar-scanner \
-                    -Dsonar.projectKey=${SONAR_PROJECT_KEY} \
-                    -Dsonar.sources=. "
-  }
+                    def scannerHome = tool 'SonarScanner'
+                    //selecting sonarqube server i want to interact with
+                    withSonarQubeEnv(installationName: 'sq1') {
+                        sh "${scannerHome}/bin/sonar-scanner \
+                        -Dsonar.projectKey=${SONAR_PROJECT_KEY} \
+                        -Dsonar.sources=.   "
+                    }
                 }
             }
         }
-        // stage('Scan') {
-        //     steps {
-        //         script {
-        //             def scannerHome = tool 'SonarScanner'
-        //             //selecting sonarqube server i want to interact with
-        //             withSonarQubeEnv(installationName: 'server-sonar') {
-        //                 sh "${scannerHome}/bin/sonar-scanner"
-        //             }
-        //         }
-        //     }
-        // }
         stage('Build with Kaniko') {
             steps {
                 container(name: 'kaniko', shell: '/busybox/sh') {
