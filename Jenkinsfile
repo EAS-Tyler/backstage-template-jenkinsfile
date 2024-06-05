@@ -35,8 +35,8 @@ spec:
         // GH_CREDS = credentials('gh-creds')
         // use GH token 
         // GITHUB_TOKEN = credentials('github-token')
-        SONAR_HOST_URL = credentials('sonarqube-host')
-        SONAR_TOKEN = credentials('sonarqube-token') 
+        // SONAR_HOST_URL = credentials('sonarqube-host')
+        // SONAR_TOKEN = credentials('sonarqube-token') 
     }
     stages {
         stage('Run Tests') {
