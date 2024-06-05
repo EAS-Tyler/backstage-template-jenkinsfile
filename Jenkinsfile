@@ -81,13 +81,15 @@ spec:
                 }
             }
         }
-        stage('Helm chart deployment') {
-            steps {
                 // withKubeCredentials([
                 //     [credentialsId: 'kubeconfig']
                 // ]) {
                     // set up helm? kubectl?
                     // use kc-playground  - minikube for dev
+
+                                    // }
+        stage('Helm chart deployment') {
+            steps {
                     withKubeConfig([credentialsId: 'kubeconfig']) {
                         sh '''
                             helm upgrade --install ${{ values.name }} ./helm/generic \
@@ -95,7 +97,6 @@ spec:
                             --create-namespace
                         '''
                     }
-                // }
             }
         }
     }
