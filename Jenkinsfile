@@ -117,7 +117,7 @@ spec:
                     withKubeConfig([credentialsId: 'kubeconfig']) {
                         sh '''
                         helm upgrade --install ${{ values.name }} ./helm/generic \
-                        --namespace ${values.namespace} \
+                        --namespace ${{ values.namespace }} \
                         --create-namespace
                         '''
                     }
