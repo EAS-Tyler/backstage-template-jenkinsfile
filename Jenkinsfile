@@ -37,6 +37,8 @@ spec:
         // GITHUB_TOKEN = credentials('github-token')
         SONAR_HOST_URL = credentials('sonarqube-host')
         SONAR_TOKEN = credentials('sonarqube-token')
+        SCANNER_HOME = tool 'sonar-scanner'
+
     }
     stages {
         stage('Run Tests') {
@@ -50,14 +52,19 @@ spec:
         stage('SonarQube Scan') {
             steps {
                 script {
+                    // withSonarQubeEnv('sq1') {
+                    //     sh """
+                    //         sonar-scanner \
+                    //         -Dsonar.projectKey=${SONAR_PROJECT_KEY} \
+                    //         -Dsonar.host.url=${SONAR_HOST_URL} \
+                    //         -Dsonar.login=${SONAR_TOKEN}
+                    //     """
+                    // }
                     withSonarQubeEnv('sq1') {
-                        sh """
-                            sonar-scanner \
-                            -Dsonar.projectKey=${SONAR_PROJECT_KEY} \
-                            -Dsonar.host.url=${SONAR_HOST_URL} \
-                            -Dsonar.login=${SONAR_TOKEN}
-                        """
-                    }
+                    sh" ${SCANNER_HOME**}**}/bin/sonar-scanner \
+                    -Dsonar.projectKey=${SONAR_PROJECT_KEY} \
+                    -Dsonar.sources=. "
+  }
                 }
             }
         }
