@@ -94,12 +94,12 @@ spec:
                 echo 'Helm install'
                 sh 'curl -o kubectl https://amazon-eks.s3.us-west-2.amazonaws.com/1.18.9/2020-11-02/bin/linux/amd64/kubectl'
                 sh 'curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" '
-                sh 'sudo cp kubectl /usr/bin'
-                sh 'sudo chmod +x /usr/bin/kubectl'
+                sh 'cp kubectl /usr/bin'
+                sh 'chmod +x /usr/bin/kubectl'
                 sh 'wget https://get.helm.sh/helm-v3.6.1-linux-amd64.tar.gz'
                 sh 'ls -a'
                 sh 'tar -xvzf helm-v3.6.1-linux-amd64.tar.gz'
-                sh 'sudo cp linux-amd64/helm /usr/bin'
+                sh 'cp linux-amd64/helm /usr/bin'
             }
         }
         stage('Helm chart deployment') {
