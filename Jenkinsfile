@@ -29,8 +29,8 @@ spec:
     }
     environment {
         // DOCKERHUB_CREDENTIALS = credentials('eastyler-dockerhub')
-        IMAGE_NAME = "${ { values.name } }"
-        SONAR_PROJECT_KEY = "${ { values.name } }"
+        IMAGE_NAME = "${{ values.name }}"
+        SONAR_PROJECT_KEY = "${{ values.name }}"
     // below needed?
     // GH_CREDS = credentials('gh-creds')
     // use GH token
