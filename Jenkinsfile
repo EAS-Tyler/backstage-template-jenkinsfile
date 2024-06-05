@@ -1,7 +1,7 @@
 pipeline {
     agent {
         kubernetes {
-      yaml '''
+            yaml '''
 kind: Pod
 spec:
   containers:
@@ -29,22 +29,22 @@ spec:
     }
     environment {
         // DOCKERHUB_CREDENTIALS = credentials('eastyler-dockerhub')
-        IMAGE_NAME = "${{ values.name }}" 
-        SONAR_PROJECT_KEY = "${{ values.name }}" 
-        // below needed?
-        // GH_CREDS = credentials('gh-creds')
-        // use GH token 
-        // GITHUB_TOKEN = credentials('github-token')
-        // SONAR_HOST_URL = credentials('sonarqube-host')
-        // SONAR_TOKEN = credentials('sonarqube-token') 
+        IMAGE_NAME = "${ { values.name } }"
+        SONAR_PROJECT_KEY = "${ { values.name } }"
+    // below needed?
+    // GH_CREDS = credentials('gh-creds')
+    // use GH token
+    // GITHUB_TOKEN = credentials('github-token')
+    // SONAR_HOST_URL = credentials('sonarqube-host')
+    // SONAR_TOKEN = credentials('sonarqube-token')
     }
     stages {
         stage('Run Tests') {
-      steps {
-        echo 'Running tests...'
-        // insert tests
-        sh 'echo tests successful'
-      }
+            steps {
+                echo 'Running tests...'
+                // insert tests
+                sh 'echo tests successful'
+            }
         }
         // configure scanner
         // stage('SonarQube Scan') {
@@ -73,19 +73,19 @@ spec:
         //     }
         // }
         stage('Build with Kaniko') {
-      steps {
-        container(name: 'kaniko', shell: '/busybox/sh') {
-          sh '''#!/busybox/sh
+            steps {
+                container(name: 'kaniko', shell: '/busybox/sh') {
+                    sh '''#!/busybox/sh
             /kaniko/executor --context `pwd` --destination eastyler/${{ values.name }}:latest
           '''
-        }
-      }
+                }
+            }
         }
         stage('Helm chart deployment') {
             steps {
-                withKubeCredentials([
-                    [credentialsId: 'kubeconfig']
-                ]) {
+                // withKubeCredentials([
+                //     [credentialsId: 'kubeconfig']
+                // ]) {
                     // set up helm? kubectl?
                     // use kc-playground  - minikube for dev
                     withKubeConfig([credentialsId: 'kubeconfig']) {
@@ -95,7 +95,7 @@ spec:
                             --create-namespace
                         '''
                     }
-                }
+                // }
             }
         }
     }
