@@ -28,7 +28,6 @@ spec:
         }
     }
     environment {
-        // DOCKERHUB_CREDENTIALS = credentials('eastyler-dockerhub')
         IMAGE_NAME = "${{ values.name }}"
         SONAR_PROJECT_KEY = "${{ values.name }}"
         // below needed?
@@ -37,49 +36,34 @@ spec:
         // GITHUB_TOKEN = credentials('github-token')
         SONAR_HOST_URL = credentials('sonarqube-host')
         SONAR_TOKEN = credentials('sonarqube-token')
-    // SCANNER_HOME = tool 'sonar-scanner'
     }
     stages {
-        stage('Run Tests') {
-            steps {
-                echo 'Running tests...'
-                // insert tests
-                sh 'echo tests successful'
-            }
-        }
-        // configure scanner
-        //         stage('SonarQube Scan') {
-        //             steps {
-        //                 script {
-        //                     // withSonarQubeEnv('sq1') {
-        //                     //     sh """
-        //                     //         sonar-scanner \
-        //                     //         -Dsonar.projectKey=${SONAR_PROJECT_KEY} \
-        //                     //         -Dsonar.host.url=${SONAR_HOST_URL} \
-        //                     //         -Dsonar.login=${SONAR_TOKEN}
-        //                     //     """
-        //                     // }
-        //                     withSonarQubeEnv('sq1') {
-        //                     sh" ${SCANNER_HOME**}**}/bin/sonar-scanner \
-        //                     -Dsonar.projectKey=${SONAR_PROJECT_KEY} \
-        //                     -Dsonar.sources=. "
-        //   }
-        //                 }
+        // stage('Run Tests') {
+        //     steps {
+        //         echo 'Running tests...'
+        //         // insert tests
+        //         sh 'echo tests successful'
+        //     }
+        // }
+        // stage('Scan') {
+        //     steps {
+        //         script {
+        //             def scannerHome = tool 'sonar-scanner'
+        //             withSonarQubeEnv(installationName: 'sq1') {
+        //                 sh "${scannerHome}/bin/sonar-scanner \
+        //                 -Dsonar.projectKey=${SONAR_PROJECT_KEY} \
+        //                 -Dsonar.sources=.   "
         //             }
         //         }
-        stage('Scan') {
-            steps {
-                script {
-                    def scannerHome = tool 'sonar-scanner'
-                    //selecting sonarqube server i want to interact with
-                    withSonarQubeEnv(installationName: 'sq1') {
-                        sh "${scannerHome}/bin/sonar-scanner \
-                        -Dsonar.projectKey=${SONAR_PROJECT_KEY} \
-                        -Dsonar.sources=.   "
-                    }
-                }
-            }
-        }
+        //     }
+        // }
+        // sonarqube webhook for quality gate
+        // quality gate
+        // stage('Quality Gate') {
+        //     steps {
+        //                 waitForQualityGate abortPipeline: true
+        //     }
+        // }
         stage('Build with Kaniko') {
             steps {
                 container(name: 'kaniko', shell: '/busybox/sh') {
@@ -119,16 +103,16 @@ spec:
     //         }
     //     }
     // }
-    // stage('Helm chart deployment') {
-    //     steps {
-    //             withKubeConfig([credentialsId: 'kubeconfig']) {
-    //                 sh '''
-    //                     helm upgrade --install ${{ values.name }} ./helm/generic \
-    //                     --namespace ${{ values.namespace }} \
-    //                     --create-namespace
-    //                 '''
-    //             }
-    //     }
+    stage('Helm chart deployment') {
+        steps {
+                withKubeConfig([credentialsId: 'kubeconfig']) {
+                    sh '''
+                        helm upgrade --install ${{ values.name }} ./helm/generic \
+                        --namespace ${{ values.namespace }} \
+                        --create-namespace
+                    '''
+                }
+        }
     // }
     // stage('Helm chart deployment') {
     //     steps {
@@ -144,4 +128,5 @@ spec:
     //     }
     // }
     }
+}
 }
