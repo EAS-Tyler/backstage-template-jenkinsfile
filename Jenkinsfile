@@ -88,29 +88,51 @@ spec:
                     // use kc-playground  - minikube for dev
 
         // }
+        // stage('Helm setup') {
+        //     steps {
+        //         // install helm and kubectl
+        //     }
+        // }
         stage('Helm setup') {
             steps {
-                // helm
-                echo 'Helm install'
-                sh 'curl -o kubectl https://amazon-eks.s3.us-west-2.amazonaws.com/1.18.9/2020-11-02/bin/linux/amd64/kubectl'
-                sh 'curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" '
-                sh 'cp kubectl /usr/bin'
-                sh 'chmod +x /usr/bin/kubectl'
-                sh 'wget https://get.helm.sh/helm-v3.6.1-linux-amd64.tar.gz'
-                sh 'ls -a'
-                sh 'tar -xvzf helm-v3.6.1-linux-amd64.tar.gz'
-                sh 'cp linux-amd64/helm /usr/bin'
-            }
-        }
-        stage('Helm chart deployment') {
-            steps {
-                    withKubeConfig([credentialsId: 'kubeconfig']) {
+                container('kaniko') {
+                    script {
+                        // Install Helm
                         sh '''
-                            helm upgrade --install ${{ values.name }} ./helm/generic \
-                            --namespace ${{ values.namespace }} \
-                            --create-namespace
+                        curl -fsSL https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
+                        '''
+                        // Install kubectl
+                        sh '''
+                        curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+                        chmod +x kubectl
+                        mv kubectl /usr/local/bin/
                         '''
                     }
+                }
+            }
+        }
+        // stage('Helm chart deployment') {
+        //     steps {
+        //             withKubeConfig([credentialsId: 'kubeconfig']) {
+        //                 sh '''
+        //                     helm upgrade --install ${{ values.name }} ./helm/generic \
+        //                     --namespace ${{ values.namespace }} \
+        //                     --create-namespace
+        //                 '''
+        //             }
+        //     }
+        // }
+        stage('Helm chart deployment') {
+            steps {
+                container('kaniko') {
+                    withKubeConfig([credentialsId: 'kubeconfig']) {
+                        sh '''
+                        helm upgrade --install ${IMAGE_NAME} ./helm/generic \
+                        --namespace ${values.namespace} \
+                        --create-namespace
+                        '''
+                    }
+                }
             }
         }
     }
