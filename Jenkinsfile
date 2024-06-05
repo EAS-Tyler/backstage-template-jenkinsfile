@@ -50,7 +50,7 @@ spec:
         stage('SonarQube Scan') {
             steps {
                 script {
-                    withSonarQubeEnv('SonarQube') {
+                    withSonarQubeEnv('sq1') {
                         sh """
                             sonar-scanner \
                             -Dsonar.projectKey=${SONAR_PROJECT_KEY} \
