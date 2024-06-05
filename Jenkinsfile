@@ -17,7 +17,7 @@ spec:
       - name: jenkins-docker-cfg
         mountPath: /kaniko/.docker
   - name: helm-kubectl
-    image: bitnami/kubectl-helm:latest
+    image: dtzar/helm-kubectl:latest
     imagePullPolicy: Always
     command:
     - sleep
