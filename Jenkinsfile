@@ -70,7 +70,7 @@ spec:
         stage('Scan') {
             steps {
                 script {
-                    def scannerHome = tool 'SonarScanner'
+                    def scannerHome = tool 'sonar-scanner'
                     //selecting sonarqube server i want to interact with
                     withSonarQubeEnv(installationName: 'sq1') {
                         sh "${scannerHome}/bin/sonar-scanner \
