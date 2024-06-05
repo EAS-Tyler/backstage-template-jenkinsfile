@@ -116,8 +116,8 @@ spec:
                 container('helm-kubectl') {
                     withKubeConfig([credentialsId: 'kubeconfig']) {
                         sh '''
-                        helm upgrade --install ${IMAGE_NAME} ./helm/generic \
-                        --namespace ${NAMESPACE} \
+                        helm upgrade --install ${{ values.name }} ./helm/generic \
+                        --namespace ${values.namespace} \
                         --create-namespace
                         '''
                     }
