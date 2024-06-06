@@ -79,7 +79,7 @@ spec:
         stage('Helm chart deployment') {
             steps {
                 container('helm-kubectl') {
-                    withKubeConfig([credentialsId: 'kubeconfig']) {
+                    withKubeConfig([credentialsId: '${{ values.cluster }}-kubeconfig']) {
                         sh '''
                         helm upgrade --install ${{ values.name }} ./helm/generic \
                         --namespace ${{ values.namespace }} \
