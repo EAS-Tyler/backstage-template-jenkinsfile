@@ -1,3 +1,4 @@
+{%- set clusterIndex = values.cluster.indexOf('.clusters.easlab.co.uk') %}
 pipeline {
     agent {
         kubernetes {
@@ -79,7 +80,7 @@ spec:
         stage('Helm chart deployment') {
             steps {
                 container('helm-kubectl') {
-                    withKubeConfig([credentialsId: '${{ values.cluster }}-kubeconfig']) {
+                    withKubeConfig([credentialsId: '${{ values.cluster.slice(0, clusterIndex) }}-kubeconfig']) {
                         sh '''
                         helm upgrade --install ${{ values.name }} ./helm/generic \
                         --namespace ${{ values.namespace }} \
