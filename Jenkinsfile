@@ -61,13 +61,12 @@ spec:
                 }
             }
         }
-        // sonarqube webhook for quality gate
-        // quality gate
-        // stage('Quality Gate') {
-        //     steps {
-        //                 waitForQualityGate abortPipeline: true
-        //     }
-        // }
+        stage('Quality Gate') {
+            steps {
+                timeout(time: 2, unit: 'MINUTES') {
+                        waitForQualityGate abortPipeline: true
+                }
+        }}
         stage('Build with Kaniko') {
             steps {
                 container(name: 'kaniko', shell: '/busybox/sh') {
@@ -90,5 +89,5 @@ spec:
                 }
             }
         }
-}
-}
+        }
+    }
