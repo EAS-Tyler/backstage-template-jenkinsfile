@@ -71,7 +71,7 @@ spec:
             steps {
                 container(name: 'kaniko', shell: '/busybox/sh') {
                     sh '''#!/busybox/sh
-            /kaniko/executor --context `pwd` --destination eastyler/${{ values.name }}:latest
+            /kaniko/executor --context `pwd` --destination enterpriseautomation/${{ values.name }}:latest
           '''
                 }
             }
@@ -91,3 +91,5 @@ spec:
         }
         }
     }
+
+// kubeconfig and registry
