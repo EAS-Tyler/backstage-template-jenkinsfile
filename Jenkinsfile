@@ -38,8 +38,7 @@ spec:
     environment {
         IMAGE_NAME = "${{ values.name }}"
         SONAR_PROJECT_KEY = "${{ values.name }}"
-        // SONAR_HOST_URL = credentials('sonarqube-host')
-        // SONAR_TOKEN = credentials('sonarqube-token')
+
     }
     stages {
         stage('Run Tests') {
@@ -91,5 +90,3 @@ spec:
         }
         }
     }
-
-// kubeconfig and registry
